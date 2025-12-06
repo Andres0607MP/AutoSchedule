@@ -23,6 +23,26 @@ Apps principales
 - `queue/`: tickets de turno, prioridades y estados.
 - `smartqueue/`: motor de asignación inteligente, simulación y commit.
 
+Base de datos
+-------------
+
+SmartQueue usa **MySQL** tanto en desarrollo como en producción.
+
+La configuración de la base de datos se controla mediante variables de entorno (cargadas desde `.env` en local):
+
+- `DJANGO_DB_ENGINE` (por defecto `django.db.backends.mysql`).
+- `DJANGO_DB_NAME`: nombre de la base de datos (por ejemplo, `smartqueue`).
+- `DJANGO_DB_USER`: usuario de la base de datos.
+- `DJANGO_DB_PASSWORD`: contraseña del usuario.
+- `DJANGO_DB_HOST`: host del servidor MySQL (por defecto `localhost` en desarrollo).
+- `DJANGO_DB_PORT`: puerto del servidor MySQL (por defecto `3306`).
+- `DJANGO_DB_CHARSET`: charset usado por la base de datos (por defecto `utf8mb4`).
+
+Entornos:
+
+- **Desarrollo**: usa el módulo de settings `config.settings.dev`, normalmente apuntando a un MySQL local definido en `.env`.
+- **Producción**: usa el módulo de settings `config.settings.prod`, apuntando a una instancia MySQL en la nube configurada con las mismas variables de entorno en el proveedor (Railway, Render, RDS, etc.).
+
 Roles y responsabilidades
 -------------------------
 
