@@ -1,13 +1,16 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 
-SECRET_KEY = 'django-insecure-reemplaza-esta-clave-en-produccion'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-reemplaza-esta-clave-en-desarrollo')
 
 
-DEBUG = False
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 
 
 ALLOWED_HOSTS: list[str] = []
@@ -60,14 +63,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'smartqueue',
-        'USER': 'root',
-        'PASSWORD': '252500',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': os.getenv('DJANGO_DB_ENGINE', 'django.db.backends.mysql'),
+        'NAME': os.getenv('DJANGO_DB_NAME', 'smartqueue'),
+        'USER': os.getenv('DJANGO_DB_USER', 'root'),
+        'PASSWORD': os.getenv('DJANGO_DB_PASSWORD', ''),
+        'HOST': os.getenv('DJANGO_DB_HOST', 'localhost'),
+        'PORT': os.getenv('DJANGO_DB_PORT', '3306'),
         'OPTIONS': {
-            'charset': 'utf8mb4',
+            'charset': os.getenv('DJANGO_DB_CHARSET', 'utf8mb4'),
         },
     }
 }
