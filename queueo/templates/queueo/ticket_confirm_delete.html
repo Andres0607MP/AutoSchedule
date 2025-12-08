@@ -1,0 +1,6 @@
+{% extends 'queueo/base.html' %}
+{% block content %}
+<h1>Eliminar Ticket</h1>
+<p>¿Desea eliminar el ticket "{{ object.code }}"?</p>
+<form method="post">{% csrf_token %}<button type="submit">Confirmar</button></form>
+{% endblock %}

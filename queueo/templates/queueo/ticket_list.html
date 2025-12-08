@@ -1,0 +1,15 @@
+{% extends 'queueo/base.html' %}
+{% block content %}
+<h1>Tickets</h1>
+<a href="{% url 'ticket-create' %}">Crear ticket</a>
+<ul>
+{% for t in tickets %}
+    <li>
+        <a href="{% url 'ticket-detail' t.pk %}">{{ t.code }}</a> - {{ t.service.name }} - {{ t.get_status_display }} - {{ t.priority }}
+        (<a href="{% url 'ticket-update' t.pk %}">editar</a> | <a href="{% url 'ticket-delete' t.pk %}">eliminar</a>)
+    </li>
+{% empty %}
+    <li>No hay tickets.</li>
+{% endfor %}
+</ul>
+{% endblock %}

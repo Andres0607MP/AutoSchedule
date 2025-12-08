@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'django_filters',
+    'queueo',
 ]
 
 
@@ -121,4 +123,10 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'SmartQueue API',
     'DESCRIPTION': 'API para el sistema inteligente de turnos SmartQueue.',
     'VERSION': '1.0.0',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }

@@ -1,0 +1,7 @@
+{% extends 'queueo/base.html' %}
+{% block content %}
+<h1>{{ service.name }}</h1>
+<p>{{ service.description }}</p>
+<p>Duración estimada: {{ service.estimated_duration }} minutos</p>
+<a href="{% url 'service-update' service.pk %}">Editar</a> | <a href="{% url 'service-delete' service.pk %}">Eliminar</a>
+{% endblock %}

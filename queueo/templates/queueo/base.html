@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>SmartQueue</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Inicio</a> |
+        <a href="/api/queueo/web/services/">Servicios</a> |
+        <a href="/api/queueo/web/tickets/">Mis Tickets</a> |
+        {% if user.is_authenticated %}
+            <span>Hola, {{ user.username }}</span>
+            <a href="/admin/logout/">Salir</a>
+        {% else %}
+            <a href="/admin/login/">Iniciar sesión</a>
+        {% endif %}
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

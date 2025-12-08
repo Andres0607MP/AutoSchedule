@@ -1,0 +1,6 @@
+{% extends 'queueo/base.html' %}
+{% block content %}
+<h1>Eliminar Servicio</h1>
+<p>¿Desea eliminar el servicio "{{ object.name }}"?</p>
+<form method="post">{% csrf_token %}<button type="submit">Confirmar</button></form>
+{% endblock %}

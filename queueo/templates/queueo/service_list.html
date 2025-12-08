@@ -1,0 +1,15 @@
+{% extends 'queueo/base.html' %}
+{% block content %}
+<h1>Servicios</h1>
+<a href="{% url 'service-create' %}">Crear servicio</a>
+<ul>
+{% for s in services %}
+    <li>
+        <a href="{% url 'service-detail' s.pk %}">{{ s.name }}</a> - {{ s.estimated_duration }} min
+        (<a href="{% url 'service-update' s.pk %}">editar</a> | <a href="{% url 'service-delete' s.pk %}">eliminar</a>)
+    </li>
+{% empty %}
+    <li>No hay servicios.</li>
+{% endfor %}
+</ul>
+{% endblock %}

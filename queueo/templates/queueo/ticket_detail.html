@@ -1,0 +1,10 @@
+{% extends 'queueo/base.html' %}
+{% block content %}
+<h1>Ticket {{ ticket.code }}</h1>
+<p>Servicio: {{ ticket.service.name }}</p>
+<p>Estado: {{ ticket.get_status_display }}</p>
+<p>Prioridad: {{ ticket.priority }}</p>
+<p>Creado: {{ ticket.created_at }}</p>
+{% if ticket.estimated_time %}<p>Hora estimada: {{ ticket.estimated_time }}</p>{% endif %}
+<a href="{% url 'ticket-update' ticket.pk %}">Editar</a> | <a href="{% url 'ticket-delete' ticket.pk %}">Eliminar</a>
+{% endblock %}
