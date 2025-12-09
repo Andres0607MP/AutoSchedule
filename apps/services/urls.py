@@ -1,9 +1,7 @@
 from django.urls import path
-from . import views
-
-
-app_name = 'services'
+from .views import ServiceListCreateView, ServiceDetailView
 
 urlpatterns = [
-    path('health/', views.health, name='health'),
+    path("", ServiceListCreateView.as_view(), name="service-list"),
+    path("<int:pk>/", ServiceDetailView.as_view(), name="service-detail"),
 ]
