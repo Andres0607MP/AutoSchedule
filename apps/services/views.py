@@ -35,3 +35,9 @@ def assign_agents(request, pk):
 def popular_services(request):
     popular = Service.objects.order_by("-estimated_time")[:5]
     return Response(ServiceSerializer(popular, many=True).data)
+class ServiceListCreateView(generics.ListCreateAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ServiceFilter
