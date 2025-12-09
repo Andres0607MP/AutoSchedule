@@ -1,25 +1,37 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 
 from .models import Service
-from .serializers import ServiceSerializer, ServiceCreateUpdateSerializer
+from .serializers import AssignAgentsSerializer, ServiceSerializer
 
-class ServiceListCreateView(generics.ListCreateAPIView):
-    queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
-    permission_classes = [IsAuthenticated]
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def service_agents(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+    return Response({
+        "service": service.name,
+        "agents": [
+            {"id": a.id, "username": a.username, "email": a.email}
+            for a in service.agents.all()
+        ]
+    })
 
-    def get_serializer_class(self):
-        return ServiceCreateUpdateSerializer if self.request.method == "POST" else ServiceSerializer
+
+@api_view(["POST"])
+@permission_classes([IsAdminUser])
+def assign_agents(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+    serializer = AssignAgentsSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    service.agents.set(serializer.validated_data["agent_ids"])
+    return Response({"message": "Agentes asignados correctamente"})
 
 
-class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_serializer_class(self):
-        if self.request.method in ("PUT", "PATCH"):
-            return ServiceCreateUpdateSerializer
-        return ServiceSerializer
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def popular_services(request):
+    popular = Service.objects.order_by("-estimated_time")[:5]
+    return Response(ServiceSerializer(popular, many=True).data)

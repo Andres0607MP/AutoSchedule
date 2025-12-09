@@ -13,3 +13,8 @@ class ServiceSerializer(serializers.ModelSerializer):
             "id", "name", "description", "estimated_time",
             "category", "agents", "created_at"
         ]
+class AssignAgentsSerializer(serializers.Serializer):
+    agent_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        allow_empty=False
+    )
