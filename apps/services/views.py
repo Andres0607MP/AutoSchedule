@@ -21,3 +21,7 @@ class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+@service_list_docs
+class ServiceListCreateView(generics.ListCreateAPIView):
+    ...

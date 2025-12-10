@@ -1,10 +1,18 @@
-from django.test import TestCase
+import pytest
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
+from services.models import Service
 
+@pytest.mark.django_db
+def test_filter_by_name():
+    Service.objects.create(name="Asesoría", category="general", estimated_duration=10)
+    Service.objects.create(name="Caja rápida", category="banco", estimated_duration=5)
 
-class ServicesTest(TestCase):
+    client = APIClient()
+    user = User.objects.create_user("demo", "demo@test.com", "123456")
+    client.force_authenticate(user)
 
-    def test_example_service_greet(self):
-        from .services import ExampleService
-
-        s = ExampleService()
-        self.assertEqual(s.greet('Andres'), 'Hola, Andres')
+    response = client.get("/api/services/?name=caja")
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["name"] == "Caja rápida"
