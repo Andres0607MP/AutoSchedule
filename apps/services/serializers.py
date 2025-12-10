@@ -1,20 +1,24 @@
+from rest_framework import serializers
+from users.models import Profile
+from .models import Service
+
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ["id", "username", "email"]
+        model = Profile
+        fields = ["id", "user", "role"]
 
-
-class ServiceSerializer(serializers.ModelSerializer):
-    agents = AgentSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Service
-        fields = [
-            "id", "name", "description", "estimated_time",
-            "category", "agents", "created_at"
-        ]
 class AssignAgentsSerializer(serializers.Serializer):
-    agent_ids = serializers.ListField(
+    agents = serializers.ListField(
         child=serializers.IntegerField(),
         allow_empty=False
     )
+
+    def validate_agents(self, value):
+        from users.models import Profile
+
+        agents = Profile.objects.filter(id__in=value, role="agent")
+        if agents.count() != len(value):
+            raise serializers.ValidationError(
+                "Uno o más IDs no corresponden a perfiles con rol 'agent'."
+            )
+        return value
