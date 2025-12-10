@@ -1,27 +1,22 @@
 from rest_framework import generics, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework.views import APIView
+from models import Service
+from serializers import ServiceSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Service
-from .serializers import (
-    AssignAgentsSerializer,
-    AgentSerializer,
-)
+class IsAdminOrReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return request.user.is_authenticated
+        return request.user.is_staff  # o rol == admin
 
-class AssignAgentsView(APIView):
-    permission_classes = [permissions.IsAdminUser]
+class ServiceListCreateView(generics.ListCreateAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+    permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = None  # se actualiza en la sección S5
 
-    def post(self, request, pk):
-        service = generics.get_object_or_404(Service, pk=pk)
-        serializer = AssignAgentsSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        agent_ids = serializer.validated_data["agents"]
-        service.agents.set(agent_ids)
-        service.save()
-
-        return Response({
-            "service_id": service.id,
-            "assigned_agents": agent_ids
-        })
+class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+    permission_classes = [IsAdminOrReadOnly]
