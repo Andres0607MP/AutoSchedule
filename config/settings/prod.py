@@ -2,10 +2,16 @@ from .base import *  # noqa
 import os
 import dj_database_url
 
-# Ensure critical settings are preserved from base
-if not globals().get('ROOT_URLCONF'):
+# Explicitly ensure these critical settings are available
+# (in case of import issues)
+try:
+    ROOT_URLCONF
+except NameError:
     ROOT_URLCONF = 'config.urls'
-if not globals().get('WSGI_APPLICATION'):
+
+try:
+    WSGI_APPLICATION
+except NameError:
     WSGI_APPLICATION = 'config.wsgi.application'
 
 DEBUG = False
