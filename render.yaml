@@ -1,14 +1,25 @@
 services:
   - type: web
-    name: smartqueue-web
+    name: smartqueue
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "bash start.sh"
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: ./start.sh
     envVars:
-      # DATABASE_URL removed from repo for security. Set this in the provider's
-      # environment/secret settings (Render/Heroku UI).
+      # DO NOT STORE SECRETS IN THIS FILE. Set values in Render dashboard or via Render API.
+      - key: DJANGO_SECRET_KEY
+      - key: DJANGO_DEBUG
       - key: DATABASE_URL
-        value: "<SET IN RENDER UI>"
+      - key: DJANGO_DB_ENGINE
+      - key: DJANGO_DB_NAME
+      - key: DJANGO_DB_USER
+      - key: DJANGO_DB_PASSWORD
+      - key: DJANGO_DB_HOST
+      - key: DJANGO_DB_PORT
       - key: SKIP_MIGRATIONS
-        value: "true"
+      - key: CREATE_SUPERUSER_ON_START
+      - key: DJANGO_SUPERUSER_USERNAME
+      - key: DJANGO_SUPERUSER_EMAIL
+      - key: DJANGO_SUPERUSER_PASSWORD
     autoDeploy: true
