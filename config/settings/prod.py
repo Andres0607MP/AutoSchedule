@@ -21,6 +21,38 @@ elif os.getenv('DATABASE_URL'):
     if db_url.startswith('mariadb://'):
         # dj_database_url expects mysql:// for MySQL-compatible backends
         db_url = 'mysql://' + db_url[len('mariadb://'):]
+    # Parse the URL
+    parsed = dj_database_url.parse(db_url, conn_max_age=600)
+
+    # If parsing produced an unexpectedly short or empty DB name, try to
+    # fall back to explicit env var `DJANGO_DB_NAME` (helps when the
+    # provider UI truncated the value or an export issue happened).
+    db_name = parsed.get('NAME') or ''
+    if not db_name or len(db_name) < 4:
+        fallback_name = os.getenv('DJANGO_DB_NAME')
+        if fallback_name:
+            parsed['NAME'] = fallback_name
+
+    # Mask password for safer logging
+    def _mask_url(purl: str) -> str:
+        try:
+            pre, post = purl.split('@', 1)
+            if ':' in pre:
+                user, pwd = pre.split(':', 1)
+                return f"{user}:***@{post}"
+        except Exception:
+            pass
+        return purl
+
+    # Emit a small diagnostic to the process stdout so the deploy logs
+    # show what DB name Django will use. This helps debugging deploys.
+    try:
+        masked = _mask_url(db_url)
+        print(f"[prod settings] DATABASE_URL (masked): {masked}")
+        print(f"[prod settings] Parsed DB NAME: {parsed.get('NAME')}")
+    except Exception:
+        pass
+
     DATABASES = {
-        'default': dj_database_url.parse(db_url, conn_max_age=600)
+        'default': parsed
     }
