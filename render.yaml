@@ -6,7 +6,8 @@ services:
     startCommand: "bash start.sh"
     envVars:
       - key: DATABASE_URL
-        value: "mariadb://smartqueue1_afraiddug:472cdbba0ad79339455d5829785c4e40a2418c51@k5kc-c.h.filess.io:3305/smartqueue1_afraiddug"
+        # Use the mysql scheme so dj-database-url recognizes the engine.
+        value: "mysql://smartqueue1_afraiddug:472cdbba0ad79339455d5829785c4e40a2418c51@k5kc-c.h.filess.io:3305/smartqueue1_afraiddug"
       - key: SKIP_MIGRATIONS
         value: "true"
     autoDeploy: true
