@@ -14,7 +14,8 @@ echo "Collecting static files..."
 python manage.py collectstatic --noinput --settings=config.settings.prod
 
 # Crear superusuario si no existe — solo si CREATE_SUPERUSER_ON_START=true
-if [ "${CREATE_SUPERUSER_ON_START:-}" = "true" ]; then
+# Además: no crear si SKIP_MIGRATIONS=true para evitar fallos cuando la BD no está lista
+if [ "${SKIP_MIGRATIONS:-}" != "true" ] && [ "${CREATE_SUPERUSER_ON_START:-}" = "true" ]; then
     echo "Ensuring superuser exists..."
     python manage.py shell --settings=config.settings.prod <<'PY'
 import os
@@ -32,7 +33,7 @@ else:
         print('Superuser already exists:', username)
 PY
 else
-    echo "Skipping superuser creation (CREATE_SUPERUSER_ON_START not true)"
+    echo "Skipping superuser creation (either SKIP_MIGRATIONS=true or CREATE_SUPERUSER_ON_START not true)"
 fi
 
 # Iniciar Gunicorn usando el puerto correcto
