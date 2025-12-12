@@ -228,10 +228,5 @@ web: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
 
 ---
 
-Si querés, puedo:
-- Añadir ejemplos más detallados (Postman collection o OpenAPI export) — dime si lo querés.
-- Añadir instrucciones de despliegue automáticas (Dockerfile + Procfile) y un script CI básico que verifica `DEBUG=False` en `prod`.
-
-Contacto: abre un issue o asigname una tarea si querés que automatice alguno de los pasos.
 
 
