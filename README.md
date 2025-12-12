@@ -230,3 +230,9 @@ web: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
 
 
 
+
+
+
+#Link despliege:
+https://smartqueue-mad3.onrender.com/swagger/
+
