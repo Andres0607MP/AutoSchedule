@@ -4,4 +4,9 @@ services:
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "bash start.sh"
+    envVars:
+      - key: DATABASE_URL
+        value: "mysql://smartqueuee_jumpswamme:1b93335bf5ce2439e43db1423098eedefeff9ef7@4drnk2.h.filess.io:61002/smartqueuee_jumpswamme"
+      - key: SKIP_MIGRATIONS
+        value: "true"
     autoDeploy: true
