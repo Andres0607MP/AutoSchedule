@@ -7,6 +7,9 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import RegisterSerializer, ProfileSerializer, UserDetailSerializer, UserSerializer
+from django.db import IntegrityError
+from rest_framework import status
+from rest_framework.response import Response
 from .models import Profile
 from .permissions import IsAdmin, IsOwnerOrReadOnly
 from .filters import UserFilter
@@ -15,6 +18,19 @@ from .filters import UserFilter
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_create(serializer)
+        except IntegrityError as e:
+            return Response({'detail': 'Integrity error', 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # Return a clearer message instead of a raw 500
+            return Response({'detail': 'Could not create user', 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class ProfileMeView(APIView):
