@@ -24,7 +24,16 @@ python manage.py collectstatic --noinput --settings=config.settings.prod
 # Además: no crear si SKIP_MIGRATIONS=true para evitar fallos cuando la BD no está lista
 if [ "${SKIP_MIGRATIONS:-}" != "true" ] && [ "${CREATE_SUPERUSER_ON_START:-}" = "true" ]; then
     echo "Ensuring superuser exists..."
-    python manage.py shell --settings=config.settings.prod 
+    python manage.py shell --settings=config.settings.prod <<EOF
+from django.contrib.auth import get_user_model
+User = get_user_model()
+if not User.objects.filter(username='admin').exists():
+    User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+    print("Superuser 'admin' created.")
+else:
+    print("Superuser 'admin' already exists.")
+EOF
+fi
 
 echo "Starting gunicorn..."
 exec gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
