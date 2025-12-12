@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-reemplaza-esta-clav
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list[str] = ["smartqueue-mad3.onrender.com"]
 
 
 INSTALLED_APPS = [
