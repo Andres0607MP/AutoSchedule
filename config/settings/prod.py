@@ -2,18 +2,6 @@ from .base import *  # noqa
 import os
 import dj_database_url
 
-# Explicitly ensure these critical settings are available
-# (in case of import issues)
-try:
-    ROOT_URLCONF
-except NameError:
-    ROOT_URLCONF = 'config.urls'
-
-try:
-    WSGI_APPLICATION
-except NameError:
-    WSGI_APPLICATION = 'config.wsgi.application'
-
 DEBUG = False
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
