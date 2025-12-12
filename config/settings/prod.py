@@ -2,6 +2,12 @@ from .base import *  # noqa
 import os
 import dj_database_url
 
+# Ensure critical settings are preserved from base
+if not globals().get('ROOT_URLCONF'):
+    ROOT_URLCONF = 'config.urls'
+if not globals().get('WSGI_APPLICATION'):
+    WSGI_APPLICATION = 'config.wsgi.application'
+
 DEBUG = False
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
