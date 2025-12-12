@@ -6,7 +6,9 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')
+    # Por seguridad, usar settings de producción por defecto al clonar.
+    # Para desarrollo local explícito use: --settings=config.settings.dev
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
