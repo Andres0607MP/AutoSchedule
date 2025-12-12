@@ -16,6 +16,11 @@ if SKIP_MIGRATIONS:
         }
     }
 elif os.getenv('DATABASE_URL'):
+    # Normalize known alternate schemes (e.g. Render may provide a mariadb:// URL)
+    db_url = os.getenv('DATABASE_URL') or ''
+    if db_url.startswith('mariadb://'):
+        # dj_database_url expects mysql:// for MySQL-compatible backends
+        db_url = 'mysql://' + db_url[len('mariadb://'):]
     DATABASES = {
-        'default': dj_database_url.parse(os.getenv('DATABASE_URL'), conn_max_age=600)
+        'default': dj_database_url.parse(db_url, conn_max_age=600)
     }
