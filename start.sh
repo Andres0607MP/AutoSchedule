@@ -2,7 +2,7 @@
 set -e
 
 if [ "${SKIP_MIGRATIONS:-}" = "true" ]; then
-	echo "SKIP_MIGRATIONS=true — skipping migrations."
+	echo "SKIP_MIGRATIONS=false — skipping migrations."
 else
 	echo "Running Django migrations (prod settings)..."
 	python manage.py migrate --noinput --settings=config.settings.prod
