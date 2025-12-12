@@ -11,5 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-# Use prod settings by default in production
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.getenv('DJANGO_SETTINGS_MODULE', 'config.settings.prod'))
+# Explicitly set to prod settings
+settings_module = os.getenv('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
+os.environ['DJANGO_SETTINGS_MODULE'] = settings_module
